@@ -12,7 +12,8 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 model = joblib.load(os.path.join(BASE, "credit_fraud_model.pkl"))
 scaler = joblib.load(os.path.join(BASE, "credit_fraud_scaler.pkl"))
-df = pd.read_csv(os.path.join(BASE, "creditcard.csv"))
+dataset_path = os.path.join(BASE, "creditcard.csv")
+df = pd.read_csv(dataset_path) if os.path.exists(dataset_path) else None
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -20,7 +21,8 @@ if "history" not in st.session_state:
 st.title("💳 Credit Card Fraud Detection")
 st.caption("Random Forest | Machine Learning | Interactive Fraud Analysis")
 
-page = st.sidebar.radio("Navigation", ["Dashboard", "Test Transactions", "Custom Prediction"])
+pages = ["Dashboard", "Custom Prediction"] if df is None else ["Dashboard", "Test Transactions", "Custom Prediction"]
+page = st.sidebar.radio("Navigation", pages)
 
 if page == "Dashboard":
     st.subheader("Fraud Monitoring Dashboard")
